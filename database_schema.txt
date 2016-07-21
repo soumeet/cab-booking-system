@@ -1,0 +1,5 @@
+customer(customer_id, name, gender, dob, status, mobile, email, address)
+driver(driver_id, name, gender, dob, status, mobile, email, address, cab_id)
+cab(cab_id, reg_no, plate_no, type, name, cost_per_km)
+ride(ride_id, driver_id, customer_id, from, to, uptime, downtime, distance)
+bill(bill_id, ride_id, bill_date, status, amount)

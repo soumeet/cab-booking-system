@@ -1,0 +1,22 @@
+pages:
+- driver registration page
+- customer registration page
+- customer login page
+- driver login page
+- customer homepage
+	- search cab(from, to, type)
+	- ride history(driver_name, from, to, distance, amount)
+	- edit profile(name, mobile, email, dob, address)
+	- logout
+- driver homepage
+	- requested ride(to, from, type)
+	- ride history(customer_name, from, to, distance, amount)
+	- edit profile(name, mobile, email, dob, address)
+	- logout
+
+databases required:
+- customer(customer_id, name, gender, dob, status, mobile, email, address)
+- driver(driver_id, name, gender, dob, status, mobile, email, address, cab_id)
+- cab(cab_id, reg_no, plate_no, type, name, cost_per_km)
+- ride(ride_id, driver_id, customer_id, to, from, pickuptime, delivertime, distance)
+- bill(bill_id, bill_date, status, ride_id, amount)
