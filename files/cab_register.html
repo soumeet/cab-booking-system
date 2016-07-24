@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+    <title>Cab Registration</title>
+        <link rel="stylesheet" href="css/cab_register_style.css">
+  </head>
+
+  <body>
+    <body class="align">
+
+  <div class="site__container">
+    <div class="grid__container">
+      <form action="python/cab_register.py" method="post" class="form form--login">
+
+        <div class="form__field">
+          <label for="login__username"><span class="hidden">Registration No</span></label>
+          <input name="reg_no" id="login__username" type="text" class="form__input" placeholder="Registration No" required>
+        </div>
+
+        <div class="form__field">
+          <label for="login__username"><span class="hidden">Type</span></label>
+          <input name="type" id="login__username" type="text" class="form__input" placeholder="Type" required>
+        </div>
+
+        <div class="form__field">
+          <label for="login__username"><span class="hidden">Cab Name</span></label>
+          <input name="name" id="login__username" type="text" class="form__input" placeholder="Cab Name" required>
+        </div>
+
+        <div class="form__field">
+          <label for="login__username"><span class="hidden">Mileage</span></label>
+          <input name="cost_per_km" id="login__username" type="text" class="form__input" placeholder="Mileage" required>
+        </div>
+
+        <div class="form__field">
+          <input type="submit" value="Get Registered">
+        </div>
+
+      </form>
+    </div>
+  </div>
+</body>
+  </body>
+</html>
