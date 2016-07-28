@@ -36,7 +36,8 @@ if sts==1:
 	# sql="UPDATE CUSTOMER SET STATUS = 'ONLINE' WHERE EMAIL = '%s' AND PASSWORD = '%s'" % (email, password)
 	# cur.execute(sql)
 	# cur.execute('commit')
-	sql="SELECT * FROM CUSTOMER WHERE EMAIL = '%s' AND PASSWORD = '%s'" % (email, password)
+    '''
+    sql="SELECT * FROM CUSTOMER WHERE EMAIL = '%s' AND PASSWORD = '%s'" % (email, password)
 	cur.execute(sql)
 	for r in cur:
 		print('<h3>Name: ',r[1],'</h3>')
@@ -45,6 +46,8 @@ if sts==1:
 		print('<h3>Mobile',r[5],'</h3>')
 		print('<h3>Email: ',r[6],'</h3>')
 		print('<h3>Address: ',r[7],'</h3>')
+    '''
+    
 if sts==-1:
 	print('<h2>Wrong Password</h2>')
 # if sts==-2:
