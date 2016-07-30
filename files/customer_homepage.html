@@ -60,8 +60,62 @@
 
             <div class="tab-content">
               <div id="ride_now" class="tab-pane fade in active">
-                <h3>HOME</h3>
-                <p>Some content.</p>
+                <h3>&nbsp;</h3>
+                  <form name="fm_driver_list" id="fm_driver_list" action="python/driver_list.py" method="post">
+                  <div class="container">
+                    <div class="row">
+                        <div class="col-md-2 pull-left">
+                            <div class="btn-group">
+                                <select class="form-control" id="type" name="type" style="width: 140px">
+                                  <option value="TYPE">Vehicle Type</option>
+                                  <option value="SCOOTY">Scooty</option>
+                                  <option value="BIKE">Bike</option>
+                                  <option value="CAR">Car</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Source</span>
+                              <input type="text" class="form-control" placeholder="Enter Location" aria-describedby="sizing-addon2" id="source" name="source" required>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Destination</span>
+                              <input type="text" class="form-control" placeholder="Enter Location" aria-describedby="sizing-addon2" id="destination" name="destination" required>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="btn-group" role="group" aria-label="...">
+                              <button type="submit" class="btn btn-default" style="width: 140px">Search</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+                  </form>
+                  <h3>&nbsp;</h3>
+                    <div id="driver_list_msg">Available Drivers</div>
+                    <table id="table_driver_result" class=table> 
+                        <thead> 
+                            <tr> 
+                                <th>#</th> 
+                                <th>Driver</th> 
+                                <th>Vehicle Type</th> 
+                                <th>Vehicle Name</th> 
+                                <th>Mileage</th>
+                            </tr> 
+                        </thead> 
+                        <tbody id="results"> 
+                            <tr> 
+                                <th scope=row id="did">1</th> 
+                                <td id="dname">admin</td> 
+                                <td id="ctype">Sedan</td> 
+                                <td id="cname">Maruti Swift</td> 
+                                <td id="mileage">24.00</td> 
+                            </tr> 
+                        </tbody> 
+                    </table> 
               </div>
               <div id="ride_history" class="tab-pane fade">
                 <h3>&nbsp;</h3>
@@ -107,5 +161,38 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="js/index.js"></script>
+    <script>
+        $("#fm_driver_list").submit(function(e){
+            var type = $('#type').val();
+            var source = $('#source').val();
+            var destination = $('#destination').val();
+            var formURL = $(this).attr("action");
+            var data = {
+                            type:type,
+                            source:source,
+                            destination:destination
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         //alert(data);
+                                         if(data!=''){
+                                            $("#table_driver_result tbody > tr").remove(); 
+                                            $('#driver_list_msg').html(data.length+' records found');
+                                            for(var i=0;i<data.length;i++){
+                                                $('#table_driver_result > tbody:last-child').append('<tr><td>'+(i+1)+'</td><td>'+data[i][0]+'</td><td>'+data[i][1]+'</td><td>'+data[i][2]+'</td><td>'+data[i][3]+'</td></tr>');
+                                            };
+                                         }else{
+                                             $('#driver_list_msg').html('no records found');
+                                             $("#table_driver_result tbody > tr").remove(); 
+                                         }
+                                    }
+                });
+                e.preventDefault();
+        });
+      </script>
   </body>
 </html>

@@ -19,7 +19,7 @@ address=data.getvalue('address')
 password=data.getvalue('password')
 
 print('<h2>Customer Details: ', cab_id, name, gender, dob, mobile, email, address, password, '</h2>')
-#sql="INSERT INTO DRIVER(CAB_ID, NAME, GENDER, DOB, STATUS, MOBILE, EMAIL, ADDRESS, PASSWORD) VALUES(%s, '%s', '%s', '%s', 'OFFLINE', '%s', '%s', '%s', '%s')" % (cab_id, name, gender, dob, mobile, email, address, password)
+sql="INSERT INTO DRIVER(CAB_ID, NAME, GENDER, DOB, STATUS, MOBILE, EMAIL, ADDRESS, PASSWORD) VALUES(%s, '%s', '%s', '%s', 'OFFLINE', '%s', '%s', '%s', '%s')" % (cab_id, name, gender, dob, mobile, email, address, password)
 print('<h3>', sql, '</h3>')	
 cur.execute(sql)
 cur.execute('commit')
