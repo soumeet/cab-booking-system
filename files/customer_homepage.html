@@ -119,8 +119,8 @@
               </div>
               <div id="ride_history" class="tab-pane fade">
                 <h3>&nbsp;</h3>
-                <p>Summary of undertaken rides</p>
-                <table class=table> 
+                <div id="customer_history_msg"><p>Summary of undertaken rides</p></div>
+                <table id="table_customer_history"class=table>
                     <thead> 
                         <tr> 
                             <th>#</th> 
@@ -178,7 +178,6 @@
                     data : data,
                     dataType: 'json',
                     success: function (data) {
-                                         //alert(data);
                                          if(data!=''){
                                             $("#table_driver_result tbody > tr").remove(); 
                                             $('#driver_list_msg').html(data.length+' records found');
