@@ -73,18 +73,18 @@
         <div id="login">   
           <h1>Welcome Back!</h1>
           
-          <form action="python/driver_login.py" method="post">
+          <form name="fm_driver_login" id="fm_driver_login" action="python/driver_login.py" method="post">
             <div class="field-wrap">
             <label>
               Email Address<span class="req">*</span>
             </label>
-            <input type="email"required autocomplete="off" name="email"/>
+            <input type="email"required autocomplete="off" name="log_email" id="log_email"/>
           </div>
           <div class="field-wrap">
             <label>
               Password<span class="req">*</span>
             </label>
-            <input type="password"required autocomplete="off" name="password"/>
+            <input type="password"required autocomplete="off" name="log_password" id="log_password"/>
           </div>
           <p class="forgot"><a href="driver_forgot.html">Forgot Password?</a></p>
           <button type ="submit" class="button button-block"/>Log In</button>
@@ -132,6 +132,32 @@
                 });
                 e.preventDefault();
         });
+        /*$("#fm_driver_login").submit(function(e){
+            var log_email = $('#log_email').val();
+            var log_password = $('#log_password').val();
+            var formURL = $(this).attr("action");
+            var data = {
+                            log_email:log_email,
+                            log_password:log_password
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data[0]==-1){
+                                             alert('Wrong Password!');
+                                             $("#fm_driver_login")[0].reset();
+                                         }
+                                         else if(data[0]==-2){
+                                             alert('Account not found!');
+                                             $("#fm_driver_login")[0].reset();
+                                         }
+                                    }
+                });
+                e.preventDefault();
+        });*/
     </script>
   </body>
 </html>

@@ -2,14 +2,12 @@
 import cgi
 import cx_Oracle
 
-#print('Content-type: application/json\r\n\r\n')
-
 con=cx_Oracle.connect('cbs/apss@localhost/xe')
 
 cur=con.cursor()
 data=cgi.FieldStorage()
-email=data.getvalue('email')
-password=data.getvalue('password')
+email=data.getvalue('log_email')
+password=data.getvalue('log_password')
 sts=-1
 
 sql="SELECT * FROM DRIVER"
@@ -28,3 +26,5 @@ if sts==1:
         did=r[0]
         name=r[2]
     print("location: ../driver_homepage.html\r\n\r\n")
+else:
+    print("location: ../driver.html\r\n\r\n")
