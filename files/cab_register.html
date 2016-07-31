@@ -1,36 +1,34 @@
 <!DOCTYPE html>
 <html >
-  <head>
+<head>
     <meta charset="UTF-8">
     <title>Cab Registration</title>
-        <link rel="stylesheet" href="css/cab_register_style.css">
-  </head>
-
-  <body>
-    <body class="align">
+    <link rel="stylesheet" href="css/cab_register_style.css">
+</head>
+<body class="align">
 
   <div class="site__container">
     <div class="grid__container">
-      <form action="python/cab_register.py" method="post" class="form form--login">
+      <form id="fm_cab_register" name="fm_cab_register" action="python/cab_register.py" method="post" class="form form--login">
 
         <div class="form__field">
           <label for="login__username"><span class="hidden">Registration No</span></label>
-          <input name="reg_no" type="text" class="form__input" placeholder="Registration No" required>
+          <input name="reg_no" id="reg_no" type="text" class="form__input" placeholder="Registration No" required>
         </div>
 
         <div class="form__field">
           <label for="login__username"><span class="hidden">Type</span></label>
-          <input name="type" type="text" class="form__input" placeholder="Type" required>
+          <input name="type" id="type" type="text" class="form__input" placeholder="Type" required>
         </div>
 
         <div class="form__field">
           <label for="login__username"><span class="hidden">Cab Name</span></label>
-          <input name="name" type="text" class="form__input" placeholder="Cab Name" required>
+          <input name="name" id="name" type="text" class="form__input" placeholder="Cab Name" required>
         </div>
 
         <div class="form__field">
           <label for="login__username"><span class="hidden">Mileage</span></label>
-          <input name="cost_per_km" type="text" class="form__input" placeholder="Mileage" required>
+          <input name="cost_per_km" id="cost_per_km" type="text" class="form__input" placeholder="Mileage" required>
         </div>
 
         <div class="form__field">
@@ -40,6 +38,36 @@
       </form>
     </div>
   </div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script>
+        $("#fm_cab_register").submit(function(e){
+            var reg_no = $('#reg_no').val();
+            var type = $('#type').val();
+            var name = $('#name').val();
+            var cost_per_km = $('#cost_per_km').val();
+            var formURL = $(this).attr("action");
+            var data = {
+                            reg_no:reg_no,
+                            type:type,
+                            name:name,
+                            cost_per_km:cost_per_km
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data[0]==1){
+                                             alert('Cab registered with Cab ID: '+data[1])
+                                             $("#fm_cab_register")[0].reset();
+                                         }
+                                         else
+                                             alert('Cab registered failed')
+                                    }
+                });
+                e.preventDefault();
+        });
+    </script>
 </body>
-  </body>
 </html>

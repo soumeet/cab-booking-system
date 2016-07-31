@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Password</title>
+    <link rel="stylesheet" href="css/cab_register_style.css">
+</head>
+<body class="align">
+
+  <div class="site__container">
+    <div class="grid__container">
+      <form id="fm_customer_forgot" name="fm_customer_forgot" action="python/customer_forgot.py" method="post" class="form form--login">
+
+        <div class="form__field">
+          <label for="login__username"><span class="hidden">Registration No</span></label>
+          <input name="email" id="email" type="text" class="form__input" placeholder="Email" required>
+        </div>
+
+        <div class="form__field">
+          <label for="login__username"><span class="hidden">Mileage</span></label>
+          <input name="dob" id="dob" type="text" class="form__input" placeholder="Date Of Birth" required>
+        </div>
+
+        <div class="form__field">
+          <input type="submit" value="Get Password">
+        </div>
+
+      </form>
+    </div>
+  </div>
+    <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+    <script>
+        $("#fm_customer_forgot").submit(function(e){
+            var email = $('#email').val();
+            var dob = $('#dob').val();
+            var formURL = $(this).attr("action");
+            var data = {
+                            email:email,
+                            dob:dob
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data[0]==1){
+                                             alert('Password: '+data[1])
+                                             $("#fm_customer_forgot")[0].reset();
+                                         }
+                                         else
+                                             alert('Account not found')
+                                    }
+                });
+                e.preventDefault();
+        });
+    </script>
+</body>
+</html>

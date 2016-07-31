@@ -16,55 +16,55 @@
       <div class="tab-content">
         <div id="signup">   
           <h1>Sign Up for Free</h1>
-          <form action="python/driver_register.py" method="post">
+          <form name="fm_driver_register" id="fm_driver_register" action="python/driver_register.py" method="post">
           <div class="field-wrap">
             <label>
               Cab ID<span class="req">*</span>
             </label>
-            <input type="text" autocomplete="off" name="cab_id"/>
+            <input type="text" autocomplete="off" name="cab_id" id="cab_id"/>
           </div>
           <p class="forgot"><a href="cab_register.html">Cab not registered?</a></p>
           <div class="field-wrap">
             <label>
               Name<span class="req">*</span>
             </label>
-            <input type="text"  autocomplete="off" name="name"/>
+            <input type="text"  autocomplete="off" name="name" id="name"/>
           </div>
           <div class="field-wrap">
             <label>
               Gender<span class="req">*</span>
             </label>
-            <input type="text" autocomplete="off" name="gender">
+            <input type="text" autocomplete="off" name="gender" id="gender">
           </div>
           <div class="field-wrap">
             <label>
               Date Of Birth<span class="req">*</span>
             </label>
-            <input type="text"  autocomplete="off" name="dob"/>
+            <input type="text"  autocomplete="off" name="dob" id="dob"/>
           </div>
           <div class="field-wrap">
             <label>
               Mobile<span class="req">*</span>
             </label>
-            <input type="text" required autocomplete="off" name="mobile"/>
+            <input type="text" required autocomplete="off" name="mobile" id="mobile"/>
           </div>
           <div class="field-wrap">
             <label>
               Email<span class="req">*</span>
             </label>
-            <input type="email" required autocomplete="off" name="email"/>
+            <input type="email" required autocomplete="off" name="email" id="email"/>
           </div>
           <div class="field-wrap">
             <label>
               Address<span class="req">*</span>
             </label>
-            <input type="text" required autocomplete="off" name="address"/>
+            <input type="text" required autocomplete="off" name="address" id="address"/>
           </div>
           <div class="field-wrap">
             <label>
               Set A Password<span class="req">*</span>
             </label>
-            <input type="password"required autocomplete="off" name="password"/>
+            <input type="password"required autocomplete="off" name="password" id="password"/>
           </div>
           <button type="submit" class="button button-block"/>Get Started</button>
           </form>
@@ -86,7 +86,7 @@
             </label>
             <input type="password"required autocomplete="off" name="password"/>
           </div>
-          <p class="forgot"><a href="#">Forgot Password?</a></p>
+          <p class="forgot"><a href="driver_forgot.html">Forgot Password?</a></p>
           <button type ="submit" class="button button-block"/>Log In</button>
           </form>
         </div>
@@ -94,6 +94,44 @@
       
 </div> <!-- /form -->
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
-        <script src="js/index.js"></script>
+    <script src="js/index.js"></script>
+    <script>
+        $("#fm_driver_register").submit(function(e){
+            var cab_id = $('#cab_id').val();
+            var name = $('#name').val();
+            var gender = $('#gender').val();
+            var dob = $('#dob').val();
+            var mobile = $('#mobile').val();
+            var email = $('#email').val();
+            var address = $('#address').val();
+            var password = $('#password').val();
+            var formURL = $(this).attr("action");
+            var data = {
+                            cab_id:cab_id,
+                            name:name,
+                            gender:gender,
+                            dob:dob,
+                            mobile:mobile,
+                            email:email,
+                            address:address,
+                            password:password
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data[0]==1){
+                                             alert('Driver registered with Driver ID: '+data[1]);
+                                             $("#fm_driver_register")[0].reset();
+                                         }
+                                         else
+                                             alert('Driver registered failed');
+                                    }
+                });
+                e.preventDefault();
+        });
+    </script>
   </body>
 </html>
