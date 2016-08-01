@@ -41,7 +41,7 @@
                     </li>
                     <li role="separator" class="divider"></li>
                     <li>
-                        <a href="#">
+                        <a href="python/customer_logout.py">
                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                             Logout
                         </a>
@@ -55,7 +55,7 @@
         <div class="jumbotron">
             <ul class="nav nav-tabs">
               <li class="active"><a data-toggle="tab" href="#ride_now">Ride Now!</a></li>
-              <li><a data-toggle="tab" href="#ride_history">History</a></li>
+              <li><a id="tb_ride_history" data-toggle="tab" href="#ride_history">History</a></li>
             </ul>
 
             <div class="tab-content">
@@ -192,6 +192,32 @@
                 });
                 e.preventDefault();
         });
+        $('#tb_ride_history').click(function(e){
+            var cid = '0';
+            var formURL = 'python/customer_history.py';
+            var data = {
+                cid:cid
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data!=''){
+                                            $("#table_customer_history tbody > tr").remove(); 
+                                            $('#customer_history_msg').html(data.length+' records found');
+                                            for(var i=0;i<data.length;i++){
+                                                $('#table_customer_history > tbody:last-child').append('<tr><td>'+(i+1)+'</td><td>'+data[i][0]+'</td><td>'+data[i][1]+'</td><td>'+data[i][2]+'</td><td>'+data[i][3]+'</td><td>'+data[i][4]+'</td><td>'+data[i][5]+'</td><td>'+data[i][6]+'</td><td>'+data[i][7]+'</td></tr>');
+                                            };
+                                         }else{
+                                             $('#customer_history_msg').html('no records found');
+                                             $("#table_customer_history tbody > tr").remove(); 
+                                         }
+                                    }
+            });
+            e.preventDefault();
+         })
       </script>
   </body>
 </html>

@@ -1,6 +1,7 @@
 #!C:\Python34\python.exe
 import cgi
 import cx_Oracle
+import datetime
 
 print('Content-type: application/json\r\n\r\n')
 con=cx_Oracle.connect('cbs/apss@localhost/xe')
@@ -22,11 +23,11 @@ print("[")
 i=1
 for r in cur:
     driver_name=r[0]
-    bill_date=r[1]
+    bill_date=r[1].strftime('"%d-%m-%Y')
     source=r[2]
     destination=r[3]
-    uptime=r[4]
-    downtime=r[5]
+    uptime=r[4].strftime('%H:%M')
+    downtime=r[5].strftime('%H:%M')
     distance=r[6]
     amount=r[7]
     print("[\"", driver_name, "\",\"", bill_date, "\",\"", source, "\",\"", destination, "\",\"", uptime, "\",\"", downtime, "\",\"", distance, "\",\"", amount, "\"]")

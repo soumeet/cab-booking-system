@@ -14,17 +14,10 @@
         <div class="container" style="padding-right:60px">
         <nav class="navbar navbar-default">
           <div class="container-fluid">
-            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-              <a class="navbar-brand" href="#"><!--<img alt="Brand" height=20 width=20 src="http://www.applechoicedriving.com/img/driver.png">-->Driver</a>
+              <a class="navbar-brand" href="#">Driver</a>
             </div>
-
-            <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-              <!--<ul class="nav navbar-nav">
-                <li><a href="#ride_list">Drive Now!<span class="sr-only">(current)</span></a></li>
-                <li><a href="#history">Ride History</a></li>
-              </ul>-->
               <ul class="nav navbar-nav navbar-right">
                   <li><a><b>Welcome!</b></a></li>
                 <li class="dropdown">
@@ -41,7 +34,7 @@
                     </li>
                     <li role="separator" class="divider"></li>
                     <li>
-                        <a href="#">
+                        <a href="python/driver_logout.py">
                             <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                             Logout
                         </a>
@@ -55,10 +48,10 @@
         <div class="jumbotron">
             <ul class="nav nav-tabs">
               <li class="active"><a data-toggle="tab" href="#ride_now">Drive Now!</a></li>
-              <li><a data-toggle="tab" href="#ride_history">History</a></li>
+              <li><a id="tb_ride_history" data-toggle="tab" href="#ride_history">History</a></li>
             </ul>
 
-            <div class="tab-content">
+            <div id="driver_tabs" class="tab-content">
               <div id="ride_now" class="tab-pane fade in active">
                 <h3>HOME</h3>
                 <p>Some content.</p>
@@ -74,8 +67,8 @@
                             <th>Date</th> 
                             <th>Source</th> 
                             <th>Destination</th> 
-                            <th>Up Time</th>
-                            <th>Down Time</th>
+                            <th>Pickup Time</th>
+                            <th>Deliver Time</th>
                             <th>Distance</th> 
                             <th>Amount</th> 
                         </tr> 
@@ -83,14 +76,14 @@
                     <tbody id="results"> 
                         <tr> 
                             <th scope=row>1</th> 
-                            <td>admin</td> 
-                            <td>01-JAN-16</td> 
-                            <td>Esplanade</td> 
-                            <td>Ultadanga</td> 
-                            <td>02:00</td> 
-                            <td>04:00</td> 
-                            <td>14.02</td> 
-                            <td>256.00</td> 
+                            <td>[Customer]</td> 
+                            <td>[Date]</td> 
+                            <td>[Source]</td> 
+                            <td>[Destination]</td> 
+                            <td>[Up Time]</td> 
+                            <td>[Down Time]</td> 
+                            <td>[Distance]</td> 
+                            <td>[Amount]</td> 
                         </tr> 
                     </tbody> 
                 </table> 
@@ -107,5 +100,33 @@
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="js/index.js"></script>
+    <script>
+         $('#tb_ride_history').click(function(e){
+            var did = '0';
+            var formURL = 'python/driver_history.py';
+            var data = {
+                did:did
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data!=''){
+                                            $("#table_driver_history tbody > tr").remove(); 
+                                            $('#driver_history_msg').html(data.length+' records found');
+                                            for(var i=0;i<data.length;i++){
+                                                $('#table_driver_history > tbody:last-child').append('<tr><td>'+(i+1)+'</td><td>'+data[i][0]+'</td><td>'+data[i][1]+'</td><td>'+data[i][2]+'</td><td>'+data[i][3]+'</td><td>'+data[i][4]+'</td><td>'+data[i][5]+'</td><td>'+data[i][6]+'</td><td>'+data[i][7]+'</td></tr>');
+                                            };
+                                         }else{
+                                             $('#driver_history_msg').html('no records found');
+                                             $("#table_driver_history tbody > tr").remove(); 
+                                         }
+                                    }
+            });
+            e.preventDefault();
+         })
+    </script>
   </body>
 </html>

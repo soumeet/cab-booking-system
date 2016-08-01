@@ -5,7 +5,7 @@
     <title>Customer Update</title>
     <link rel="stylesheet" href="css/cab_register_style.css">
 </head>
-<body class="align">
+<body class="align" onload="load_data()">
 
   <div class="site__container">
     <div class="grid__container">
@@ -80,15 +80,42 @@
                     dataType: 'json',
                     success: function (data) {
                                          if(data[0]==1){
-                                             alert('Customer Profile Updated'+data[1])
+                                             alert('Customer Profile Updated'+data[1]);
                                              $("#fm_customer_update")[0].reset();
                                          }
                                          else
-                                             alert('Customer Profile Update Failed')
+                                             alert('Customer Profile Update Failed');
                                     }
                 });
                 e.preventDefault();
         });
+        function load_data() {
+            var cid = 0;
+            var formURL = 'python/customer_details.py';
+            var data = {
+                            cid:cid
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data!=''){
+                                             document.getElementById('name').value=data[0];
+                                             document.getElementById('gender').value=data[1];
+                                             document.getElementById('dob').value=data[2];
+                                             document.getElementById('mobile').value=data[3];
+                                             document.getElementById('email').value=data[4];
+                                             document.getElementById('address').value=data[5];
+                                             document.getElementById('password').value=data[6];
+                                         }
+                                         else
+                                             alert('Couldn\'t fetch customer profile');
+                                    }
+            });
+            e.preventDefault();
+        }
     </script>
 </body>
 </html>
