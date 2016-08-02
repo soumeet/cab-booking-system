@@ -23,7 +23,7 @@ print("[")
 i=1
 for r in cur:
     customer_name=r[0]
-    bill_date=r[1].strftime('"%d-%m-%Y')
+    bill_date=r[1].strftime('%d-%m-%Y')
     source=r[2]
     destination=r[3]
     uptime=r[4].strftime('%H:%M')

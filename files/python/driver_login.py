@@ -1,6 +1,7 @@
 #!C:\Python34\python.exe
 import cgi
 import cx_Oracle
+import beaker
 
 con=cx_Oracle.connect('cbs/apss@localhost/xe')
 
@@ -25,6 +26,7 @@ if sts==1:
     for r in cur:
         did=r[0]
         name=r[2]
+    
     print("location: ../driver_homepage.html\r\n\r\n")
 else:
     print("location: ../driver.html\r\n\r\n")
