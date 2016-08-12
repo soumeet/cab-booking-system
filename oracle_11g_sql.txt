@@ -85,5 +85,19 @@ SQL> CREATE OR REPLACE TRIGGER driver_on_insert
 
 SQL> INSERT INTO DRIVER(CAB_ID, NAME, GENDER, DOB, STATUS, MOBILE, EMAIL, ADDRESS, PASSWORD) VALUES(1, 'Sanjeet Singh Jagdev', 'M', '30-SEP-95', 'OFFLINE', '8087326591', 'ssj@gmail.com', 'Maheshtala, Kolkata', 23654789);
 
+SQL> CREATE SEQUENCE rideid_sequence;
 
+Sequence created.
+
+SQL> CREATE OR REPLACE TRIGGER ride_on_insert
+  2  BEFORE INSERT ON ride
+  3  FOR EACH ROW
+  4  BEGIN
+  5  SELECT rideid_sequence.nextval
+  6  INTO :new.ride_id
+  7  FROM dual;
+  8  END;
+  9  /
+
+Trigger created.
 

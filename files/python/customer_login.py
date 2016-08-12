@@ -9,6 +9,8 @@ data=cgi.FieldStorage()
 email=data.getvalue('email')
 password=data.getvalue('password')
 sts=-1
+cid=0
+name=""
 
 sql="SELECT * FROM CUSTOMER"
 cur.execute(sql)
@@ -24,6 +26,14 @@ if sts==1:
 	for r in cur:
 		cid=r[0]
 		name=r[1]
+	sql="INSERT INTO SESSIONS VALUES('CID', %s, '%s')" % (cid, name)
+	cur.execute(sql)
+	cur.execute("commit")
+
+	sql="UPDATE CUSTOMER SET STATUS = 'ONLINE' WHERE CUSTOMER_ID = %s" % (cid)
+	cur.execute(sql)
+	cur.execute("commit")
+    
 	print("location: ../customer_homepage.html\r\n\r\n")
 else:
         print("location: ../customer.html\r\n\r\n")

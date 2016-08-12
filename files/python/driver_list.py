@@ -17,9 +17,9 @@ sts=-1
 
 #print("<h2>source: ", source," destination: ", destination," type: ", typ,"</h2>")
 if typ=="TYPE":
-    sql="SELECT D.NAME, C.TYPE, C.NAME, C.COST_PER_KM FROM DRIVER D, CAB C WHERE D.CAB_ID = C.CAB_ID"
+    sql="SELECT D.NAME, C.TYPE, C.NAME, C.COST_PER_KM FROM DRIVER D, CAB C WHERE D.CAB_ID = C.CAB_ID AND D.STATUS = 'ONLINE'"
 else:
-    sql="SELECT D.NAME, C.TYPE, C.NAME, C.COST_PER_KM FROM DRIVER D, CAB C WHERE D.CAB_ID = C.CAB_ID AND C.TYPE = '%s'" % (typ)
+    sql="SELECT D.NAME, C.TYPE, C.NAME, C.COST_PER_KM FROM DRIVER D, CAB C WHERE D.CAB_ID = C.CAB_ID AND D.STATUS = 'ONLINE' AND C.TYPE = '%s'" % (typ)
 #print(sql)
 cur.execute(sql)
 

@@ -1,7 +1,6 @@
 #!C:\Python34\python.exe
 import cgi
 import cx_Oracle
-import beaker
 
 con=cx_Oracle.connect('cbs/apss@localhost/xe')
 
@@ -10,6 +9,8 @@ data=cgi.FieldStorage()
 email=data.getvalue('log_email')
 password=data.getvalue('log_password')
 sts=-1
+did=0
+name=""
 
 sql="SELECT * FROM DRIVER"
 cur.execute(sql)
@@ -26,7 +27,15 @@ if sts==1:
     for r in cur:
         did=r[0]
         name=r[2]
+        
+    sql="INSERT INTO SESSIONS VALUES('DID', %s, '%s')" % (did, name)
+    cur.execute(sql)
+    cur.execute("commit")
     
+    sql="UPDATE DRIVER SET STATUS = 'ONLINE' WHERE DRIVER_ID = %s" % (did)
+    cur.execute(sql)
+    cur.execute("commit")
+        
     print("location: ../driver_homepage.html\r\n\r\n")
 else:
     print("location: ../driver.html\r\n\r\n")

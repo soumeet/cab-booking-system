@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/bootstrap-theme.min.css">
   </head>
-  <body style="background: #c1bdba">
+  <body style="background: #c1bdba" onload="load_data()">
     <div class="form" style="max-width:1200px">
         <div class="container" style="padding-right:60px">
         <nav class="navbar navbar-default">
@@ -21,21 +21,17 @@
               <ul class="nav navbar-nav navbar-right">
                   <li><a><b>Welcome!</b></a></li>
                 <li class="dropdown">
-                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                      <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                      Driver<span class="caret"></span>
+                  <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" id="driver_name">Driver<span class="caret"></span>
                   </a>
                   <ul class="dropdown-menu">
                     <li>
                         <a href="driver_edit_profile.html">
-                            <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
                             Edit Profile
                         </a>
                     </li>
                     <li role="separator" class="divider"></li>
                     <li>
                         <a href="python/driver_logout.py">
-                            <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
                             Logout
                         </a>
                     </li>
@@ -53,8 +49,40 @@
 
             <div id="driver_tabs" class="tab-content">
               <div id="ride_now" class="tab-pane fade in active">
-                <h3>HOME</h3>
-                <p>Some content.</p>
+                  <p>&nbsp;</p>
+                  <h3>Requested Ride</h3>
+                  <p>&nbsp;</p>
+                  <div class="alert alert-info" role="alert" style="background: aliceblue;"  id="ride_details">
+                  <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Customer</span>
+                                  <input type="text" class="form-control" placeholder="Name" aria-describedby="sizing-addon2" id="source" name="source" required disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Source</span>
+                              <input type="text" class="form-control" placeholder="Location" aria-describedby="sizing-addon2" id="source" name="source" required disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Destination</span>
+                              <input type="text" class="form-control" placeholder="Location" aria-describedby="sizing-addon2" id="destination" name="destination" required disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-2">
+                            <div class="btn-group" role="group" aria-label="...">
+                              <button type="submit" class="btn btn-default" style="width: 140px" id="accept_ride">Accept Ride</button>
+                            </div>
+                        </div>
+                    </div>
+                  </div>
+              </div>
               </div>
               <div id="ride_history" class="tab-pane fade">
                 <h3>&nbsp;</h3>
@@ -125,6 +153,60 @@
                                     }
             });
             e.preventDefault();
+         })
+         function load_data() {
+            var type = 'did';
+            var formURL = 'python/sessions_fetch.py';
+            var data = {
+                type:type
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data!=''){
+                                             //alert(data[0]);
+                                             $('#driver_name').html(''+data[0]+'<span class="caret"></span>');
+                                         }
+                                         else
+                                             alert('Couldn\'t fetch Driver Name');
+                                    }
+            });
+            
+        }
+        $('#accept_ride').click(function(e){
+            alert('hi');
+            //$('#ride_details').remove();
+            /*var sts=-1;
+            var driver_name = document.getElementsByTagName("TD")[1].textContent.trim();
+            var customer_name = document.getElementsByTagName("A")[2].textContent.trim();
+            var source = $('#source').val();
+            var destination = $('#destination').val();
+            var formURL = 'python/ride_book.py';
+            var data = {
+                driver_name:driver_name,
+                customer_name:customer_name,
+                source:source,
+                destination:destination
+            }
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    data : data,
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data==1){
+                                             alert('Ride has been accepted');
+                                             $('#accept_ride').html('Finish Ride');
+                                             sts=1;
+                                         }else{
+                                            alert('Error Occurred');
+                                         }
+                                    }
+            });
+            e.preventDefault();*/
          })
     </script>
   </body>
