@@ -52,6 +52,7 @@
             <div class="tab-content">
               <div id="ride_now" class="tab-pane fade in active">
                 <h3>&nbsp;</h3>
+                  <div id="search_ride" style="display: none;">
                   <form name="fm_driver_list" id="fm_driver_list" action="python/driver_list.py" method="post">
                   <div class="container">
                     <div class="row">
@@ -109,6 +110,57 @@
                     </table>
                     <button type="submit" class="btn btn-default" style="width: 140px" id="book_ride">Book Ride</button>
               </div>
+              <div id="ride_details" style="display: none;">
+              <div class="alert alert-info" role="alert" style="background: aliceblue;">
+                  <div class="container">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Driver</span>
+                                  <input type="text" class="form-control" placeholder="Name" aria-describedby="sizing-addon2" id="driver_name" name="customer_name" required disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Source</span>
+                              <input type="text" class="form-control" placeholder="Location" aria-describedby="sizing-addon2" id="details_source" name="details_source" required disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Destination</span>
+                              <input type="text" class="form-control" placeholder="Location" aria-describedby="sizing-addon2" id="details_destination" name="details_destination" required disabled>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="ride_accepted" class="row" style="margin-top: 15px; display: none;">
+                        <div class="col-md-4">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Vehicle</span>
+                                  <input type="text" class="form-control" placeholder="Vehicle" aria-describedby="sizing-addon2" id="vehicle" name="vehicle" required disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Mobile</span>
+                              <input type="text" class="form-control" placeholder="Mobile" aria-describedby="sizing-addon2" id="mobile" name="mobile" required disabled>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="input-group">
+                              <span class="input-group-addon" id="sizing-addon2">Plate No.</span>
+                              <input type="text" class="form-control" placeholder="Registration No." aria-describedby="sizing-addon2" id="regno" name="regno" required disabled>
+                            </div>
+                        </div>
+                    </div> 
+              </div>
+              </div>
+              </div>
+              </div>
               <div id="ride_history" class="tab-pane fade">
                 <h3>&nbsp;</h3>
                 <div id="customer_history_msg"><p>Summary of undertaken rides</p></div>
@@ -120,8 +172,8 @@
                             <th>Date</th> 
                             <th>Source</th> 
                             <th>Destination</th> 
-                            <th>Up Time</th>
-                            <th>Down Time</th>
+                            <th>Pickup Time</th>
+                            <th>Drop Time</th>
                             <th>Distance</th> 
                             <th>Amount</th> 
                         </tr> 
@@ -186,13 +238,9 @@
         $('#tb_ride_history').click(function(e){
             var cid = '0';
             var formURL = 'python/customer_history.py';
-            var data = {
-                cid:cid
-            }
             $.ajax({   
                     url : formURL,
                     type: "POST",
-                    data : data,
                     dataType: 'json',
                     success: function (data) {
                                          if(data!=''){
@@ -222,11 +270,67 @@
                     dataType: 'json',
                     success: function (data) {
                                          if(data!=''){
-                                             //alert(data[0]);
                                             $('#customer_name').html(''+data[0]+'<span class="caret"></span>');
                                          }
                                          else
                                              alert('Couldn\'t fetch Customer Name');
+                                    }
+            });
+            var formURL = 'python/ride_details.py';
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data!=''){
+                                             if(data[8].trim()=='REQUESTED'){
+                                                 document.getElementById("ride_details").style.display = "initial";
+                                                 alert('ride already has been requested');
+                                                 var formURL = 'python/driver_details.py';
+                                                 $.ajax({
+                                                     url : formURL,
+                                                     type: "POST",
+                                                     dataType: 'json',
+                                                     success: function(res) {
+                                                         if(res!='')
+                                                             document.getElementById("driver_name").value=res[0];
+                                                         else
+                                                             alert('Database Error');
+                                                     }
+                                                 });
+                                                 document.getElementById("details_source").value=data[3];
+                                                 document.getElementById("details_destination").value=data[4];
+                                             }
+                                             if(data[8].trim()=='ACCEPTED'){
+                                                 document.getElementById("ride_details").style.display = "initial";
+                                                 document.getElementById("ride_accepted").style.display = "initial";
+                                                 alert('ride already has been accepted');
+                                                 var formURL = 'python/driver_details.py';
+                                                 $.ajax({
+                                                     url : formURL,
+                                                     type: "POST",
+                                                     dataType: 'json',
+                                                     success: function(res) {
+                                                         if(res!=''){
+                                                             document.getElementById("driver_name").value=res[0];
+                                                             document.getElementById("vehicle").value=data[7];
+                                                             document.getElementById("mobile").value=data[3];
+                                                             document.getElementById("regno").value=data[8];
+                                                         }
+                                                         else
+                                                             alert('Database Error');
+                                                     }
+                                                 });
+                                                 document.getElementById("details_source").value=data[3];
+                                                 document.getElementById("details_destination").value=data[4];
+                                             }
+                                             if(data[8].trim()=='FINISHED'){
+                                                 document.getElementById("search_ride").style.display = "initial";
+                                             }
+                                         }
+                                         else{
+                                             document.getElementById("search_ride").style.display = "initial";
+                                         }
                                     }
             });
         }

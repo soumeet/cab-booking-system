@@ -1,5 +1,4 @@
 #!C:\Python34\python.exe
-import cgi
 import cx_Oracle
 import datetime
 
@@ -7,9 +6,13 @@ print('Content-type: application/json\r\n\r\n')
 con=cx_Oracle.connect('cbs/apss@localhost/xe')
 
 cur=con.cursor()
-data=cgi.FieldStorage()
-cid=data.getvalue('cid')
+cid=0
 sts=-1
+
+sql="SELECT ID FROM SESSIONS WHERE TYPE = 'CID'"
+cur.execute(sql)
+for r in cur:
+    cid=r[0]
 
 sql="SELECT * FROM CUSTOMER WHERE CUSTOMER_ID = %s" % (cid)
 cur.execute(sql)

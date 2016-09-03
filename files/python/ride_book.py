@@ -30,7 +30,7 @@ if sts==-1:
     sql="UPDATE CUSTOMER SET STATUS = 'REQUESTED' WHERE CUSTOMER_ID = %s" % (cid)
     cur.execute(sql)
     cur.execute('commit')
-    sql="INSERT INTO RIDE(DRIVER_ID, CUSTOMER_ID, SOURC, DESTN) VALUES(%s, %s, '%s', '%s')" % (did, cid, source, destination)
+    sql="INSERT INTO RIDE(DRIVER_ID, CUSTOMER_ID, SOURC, DESTN, STATUS) VALUES(%s, %s, '%s', '%s', 'REQUESTED')" % (did, cid, source, destination)
     cur.execute(sql)
     cur.execute('commit')
     sts=1

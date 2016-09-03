@@ -90,15 +90,10 @@
                 e.preventDefault();
         });
         function load_data() {
-            var cid = 0;
             var formURL = 'python/customer_details.py';
-            var data = {
-                            cid:cid
-            }
             $.ajax({   
                     url : formURL,
                     type: "POST",
-                    data : data,
                     dataType: 'json',
                     success: function (data) {
                                          if(data!=''){

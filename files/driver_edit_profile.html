@@ -89,15 +89,10 @@
                 e.preventDefault();
         });
         function load_data() {
-            var did = 0;
             var formURL = 'python/driver_details.py';
-            var data = {
-                            did:did
-            }
             $.ajax({   
                     url : formURL,
                     type: "POST",
-                    data : data,
                     dataType: 'json',
                     success: function (data) {
                                          if(data!=''){

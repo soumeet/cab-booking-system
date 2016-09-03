@@ -59,30 +59,65 @@
                             <div class="btn-group">
                                 <div class="input-group">
                                   <span class="input-group-addon" id="sizing-addon2">Customer</span>
-                                  <input type="text" class="form-control" placeholder="Name" aria-describedby="sizing-addon2" id="source" name="source" required disabled>
+                                  <input type="text" class="form-control" placeholder="Name" aria-describedby="sizing-addon2" id="customer_name" name="customer_name" required disabled>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="input-group">
                               <span class="input-group-addon" id="sizing-addon2">Source</span>
                               <input type="text" class="form-control" placeholder="Location" aria-describedby="sizing-addon2" id="source" name="source" required disabled>
                             </div>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-4">
                             <div class="input-group">
                               <span class="input-group-addon" id="sizing-addon2">Destination</span>
                               <input type="text" class="form-control" placeholder="Location" aria-describedby="sizing-addon2" id="destination" name="destination" required disabled>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="btn-group" role="group" aria-label="...">
-                              <button type="submit" class="btn btn-default" style="width: 140px" id="accept_ride">Accept Ride</button>
+                    </div>
+                    <form name="fm_ride_distance" id="fm_driver_list" action="python/ride_finish.py" method="post">
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-md-4">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Pick-Up Time</span>
+                                  <input type="text" class="form-control" placeholder="00:00" aria-describedby="sizing-addon2" id="up_time" name="up_time" required disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Drop-Up Time</span>
+                                  <input type="text" class="form-control" placeholder="00:00" aria-describedby="sizing-addon2" id="down_time" name="down_time" required disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Distance</span>
+                                  <input type="text" class="form-control" placeholder="Kilometres" aria-describedby="sizing-addon2" id="distance" name="distance" required>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-md-6">
+                            <div class="btn-group" role="group" aria-label="...">
+                              <button class="btn btn-default" style="width: 140px;" id="accept_ride">Accept Ride</button>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn-group" role="group" aria-label="...">
+                              <button type="submit" class="btn btn-default" style="width: 140px; visibility: hidden;" id="finish_ride">Finish Ride</button>
+                            </div>
+                        </div>
+                    </div>
+                    </form>
                   </div>
-              </div>
+                  </div>
               </div>
               <div id="ride_history" class="tab-pane fade">
                 <h3>&nbsp;</h3>
@@ -96,7 +131,7 @@
                             <th>Source</th> 
                             <th>Destination</th> 
                             <th>Pickup Time</th>
-                            <th>Deliver Time</th>
+                            <th>Drop Time</th>
                             <th>Distance</th> 
                             <th>Amount</th> 
                         </tr> 
@@ -118,7 +153,7 @@
               </div>
               <div id="menu2" class="tab-pane fade">
                 <h3>Menu 2</h3>
-                <p>Some content in menu 2.</p>
+                <p>Some content in menu</p>
               </div>
             </div>
         </div>
@@ -131,13 +166,9 @@
          $('#tb_ride_history').click(function(e){
             var did = '0';
             var formURL = 'python/driver_history.py';
-            var data = {
-                did:did
-            }
             $.ajax({   
                     url : formURL,
                     type: "POST",
-                    data : data,
                     dataType: 'json',
                     success: function (data) {
                                          if(data!=''){
@@ -167,29 +198,89 @@
                     dataType: 'json',
                     success: function (data) {
                                          if(data!=''){
-                                             //alert(data[0]);
                                              $('#driver_name').html(''+data[0]+'<span class="caret"></span>');
                                          }
                                          else
                                              alert('Couldn\'t fetch Driver Name');
                                     }
             });
-            
+            var formURL = 'python/ride_details.py';
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data!=''){
+                                             if(data[8].trim()=='REQUESTED'){
+                                                     var formURL = 'python/customer_details.py';
+                                                     $.ajax({
+                                                         url : formURL,
+                                                         type: "POST",
+                                                         dataType: 'json',
+                                                         success: function (data) {
+                                                             if(data!='')
+                                                                 document.getElementById("customer_name").value=data[0];
+                                                             else
+                                                                 alert('Database Error');
+                                                        }
+                                                     });
+                                                     document.getElementById("source").value=data[3];
+                                                     document.getElementById("destination").value=data[4];
+                                             }
+                                             if(data[8].trim()=='ACCEPTED'){
+                                                 var formURL = 'python/customer_details.py';
+                                                 $.ajax({
+                                                     url : formURL,
+                                                     type: "POST",
+                                                     dataType: 'json',
+                                                     success: function (data) {
+                                                         if(data!='')
+                                                             document.getElementById("customer_name").value=data[0];
+                                                         else
+                                                             alert('Database Error');
+                                                    }
+                                                 });
+                                                 document.getElementById("source").value=data[3];
+                                                 document.getElementById("destination").value=data[4];
+                                                 document.getElementById("up_time").value=data[5];
+                                                 $('#accept_ride').html('Finish Ride');
+                                             }
+                                         }
+                                         else{
+                                             alert('no ride requested');
+                                             $('#ride_details').remove();
+                                         }
+                                    }
+            });
         }
         $('#accept_ride').click(function(e){
-            alert('hi');
-            //$('#ride_details').remove();
-            /*var sts=-1;
-            var driver_name = document.getElementsByTagName("TD")[1].textContent.trim();
-            var customer_name = document.getElementsByTagName("A")[2].textContent.trim();
-            var source = $('#source').val();
-            var destination = $('#destination').val();
-            var formURL = 'python/ride_book.py';
+            var formURL = 'python/ride_accept.py';
+            $.ajax({   
+                    url : formURL,
+                    type: "POST",
+                    dataType: 'json',
+                    success: function (data) {
+                                         if(data==1){
+                                             alert('Ride has been accepted');
+                                             //$('#accept_ride').html('Finish Ride');
+                                             document.getElementById("accept_ride").style.visibility = "hidden";
+                                             document.getElementById("finish_ride").style.visibility = "visible";
+                                             sts=1;
+                                         }else{
+                                             alert('Error Occurred');
+                                         }
+                                    }
+            });
+            e.preventDefault();
+         })
+        $('#finish_ride').click(function(e){
+            document.getElementById("finish_ride").style.visibility = "hidden";
+         })
+        $("#fm_driver_list").submit(function(e){
+            var distance = $('#distance').val();
+            var formURL = $(this).attr("action");
             var data = {
-                driver_name:driver_name,
-                customer_name:customer_name,
-                source:source,
-                destination:destination
+                            distance:distance
             }
             $.ajax({   
                     url : formURL,
@@ -197,17 +288,13 @@
                     data : data,
                     dataType: 'json',
                     success: function (data) {
-                                         if(data==1){
-                                             alert('Ride has been accepted');
-                                             $('#accept_ride').html('Finish Ride');
-                                             sts=1;
+                                         if(data!=''){
                                          }else{
-                                            alert('Error Occurred');
                                          }
                                     }
-            });
-            e.preventDefault();*/
-         })
+                });
+                e.preventDefault();
+        });
     </script>
   </body>
 </html>
