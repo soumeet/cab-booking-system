@@ -101,3 +101,20 @@ SQL> CREATE OR REPLACE TRIGGER ride_on_insert
 
 Trigger created.
 
+SQL> CREATE SEQUENCE billid_sequence;
+
+Sequence created.
+
+SQL> CREATE OR REPLACE TRIGGER bill_on_insert
+  2  BEFORE INSERT ON bill
+  3  FOR EACH ROW
+  4  BEGIN
+  5  SELECT billid_sequence.nextval
+  6  INTO :new.bill_id
+  7  FROM dual;
+  8  END;
+  9  /
+
+Trigger created.
+
+SQL> CREATE SESSIONS(TYPE VARCHAR2(3), ID NUMBER(5), NAME VARCHAR2(20));
