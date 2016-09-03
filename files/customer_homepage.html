@@ -313,9 +313,9 @@
                                                      success: function(res) {
                                                          if(res!=''){
                                                              document.getElementById("driver_name").value=res[0];
-                                                             document.getElementById("vehicle").value=data[7];
-                                                             document.getElementById("mobile").value=data[3];
-                                                             document.getElementById("regno").value=data[8];
+                                                             document.getElementById("vehicle").value=res[7];
+                                                             document.getElementById("mobile").value=res[3];
+                                                             document.getElementById("regno").value=res[8];
                                                          }
                                                          else
                                                              alert('Database Error');

@@ -273,10 +273,8 @@
             });
             e.preventDefault();
          })
-        $('#finish_ride').click(function(e){
-            document.getElementById("finish_ride").style.visibility = "hidden";
-         })
         $("#fm_driver_list").submit(function(e){
+            document.getElementById("finish_ride").style.visibility = "hidden";
             var distance = $('#distance').val();
             var formURL = $(this).attr("action");
             var data = {
@@ -288,8 +286,9 @@
                     data : data,
                     dataType: 'json',
                     success: function (data) {
-                                         if(data!=''){
-                                         }else{
+                                         if(data==1){
+                                             alert('Ride has been finished.');
+                                             document.getElementById("distance").disabled = true;
                                          }
                                     }
                 });
