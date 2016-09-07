@@ -43,18 +43,16 @@
         </nav>
         <div class="jumbotron">
             <ul class="nav nav-tabs">
-              <li class="active"><a data-toggle="tab" href="#ride_now">Drive Now!</a></li>
+              <li class="active"><a data-toggle="tab" href="#ride_now">Drive Now</a></li>
               <li><a id="tb_ride_history" data-toggle="tab" href="#ride_history">History</a></li>
             </ul>
 
             <div id="driver_tabs" class="tab-content">
               <div id="ride_now" class="tab-pane fade in active">
                   <p>&nbsp;</p>
-                  <h3>Requested Ride</h3>
-                  <p>&nbsp;</p>
-                  <div class="alert alert-info" role="alert" style="background: aliceblue;"  id="ride_details">
+                  <div id="ride" class="alert alert-info" role="alert" style="background: aliceblue; display: none;">
                   <div class="container">
-                    <div class="row">
+                    <div id="customer_details" class="row">
                         <div class="col-md-4">
                             <div class="btn-group">
                                 <div class="input-group">
@@ -76,8 +74,8 @@
                             </div>
                         </div>
                     </div>
-                    <form name="fm_ride_distance" id="fm_driver_list" action="python/ride_finish.py" method="post">
-                    <div class="row" style="margin-top: 15px;">
+                    <form name="fm_ride_distance" id="fm_ride_distance" action="python/ride_finish.py" method="post">
+                    <div id="ride_details" class="row" style="margin-top: 15px;  display: none;">
                         <div class="col-md-4">
                             <div class="btn-group">
                                 <div class="input-group">
@@ -103,25 +101,43 @@
                             </div>
                         </div>
                     </div>
-                    <div class="row" style="margin-top: 15px;">
-                        <div class="col-md-6">
+                    <div id="buttons" class="row" style="margin-top: 15px;">
+                        <div class="col-md-2 col-md-offset-4 ">
                             <div class="btn-group" role="group" aria-label="...">
-                              <button class="btn btn-default" style="width: 140px;" id="accept_ride">Accept Ride</button>
+                              <button id="accept_ride" class="btn btn-default" style="width: 140px;">Accept Ride</button>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="btn-group" role="group" aria-label="...">
-                              <button type="submit" class="btn btn-default" style="width: 140px; visibility: hidden;" id="finish_ride">Finish Ride</button>
+                              <button id="finish_ride" type="submit" class="btn btn-default" style="width: 140px;">Finish Ride</button>
                             </div>
                         </div>
                     </div>
                     </form>
+                    <div id="bill_details" class="row" style="margin-top: 15px;  display: none;">
+                        <div class="col-md-6">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Amount</span>
+                                  <input type="text" class="form-control" placeholder="STATUS" aria-describedby="sizing-addon2" id="bill_status" name="bill_status" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="btn-group">
+                                <div class="input-group">
+                                  <span class="input-group-addon" id="sizing-addon2">Amount</span>
+                                  <input type="text" class="form-control" placeholder="Rs" aria-describedby="sizing-addon2" id="bill_amount" name="bill_amount" disabled>
+                                </div>
+                            </div>
+                        </div>
+                  </div>
                   </div>
                   </div>
               </div>
               <div id="ride_history" class="tab-pane fade">
-                <h3>&nbsp;</h3>
-                <div id="driver_history_msg"><p>Summary of undertaken rides</p></div>
+                <h3 style="margin: 15px;">Summary of undertaken rides</h3>
+                <div id="driver_history_msg" style="margin: 15px;"><p></p></div>
                 <table id="table_driver_history"class=table> 
                     <thead> 
                         <tr> 
@@ -212,14 +228,20 @@
                     success: function (data) {
                                          if(data!=''){
                                              if(data[8].trim()=='REQUESTED'){
-                                                     var formURL = 'python/customer_details.py';
+                                                 document.getElementById("ride").style.display = "block";
+                                                 document.getElementById("customer_details").style.display = "block";
+                                                 document.getElementById("ride_details").style.display = "none";
+                                                 document.getElementById("buttons").style.display = "block";
+                                                 document.getElementById("accept_ride").style.visibility = "visible";
+                                                 document.getElementById("finish_ride").style.visibility = "hidden";
+                                                 var formURL = 'python/customer_details.py';
                                                      $.ajax({
                                                          url : formURL,
                                                          type: "POST",
                                                          dataType: 'json',
-                                                         success: function (data) {
-                                                             if(data!='')
-                                                                 document.getElementById("customer_name").value=data[0];
+                                                         success: function (res) {
+                                                             if(res!='')
+                                                                 document.getElementById("customer_name").value=res[0];
                                                              else
                                                                  alert('Database Error');
                                                         }
@@ -228,14 +250,18 @@
                                                      document.getElementById("destination").value=data[4];
                                              }
                                              if(data[8].trim()=='ACCEPTED'){
+                                                 document.getElementById("ride").style.display = "block";
+                                                 document.getElementById("ride_details").style.display = "block";
+                                                 document.getElementById("buttons").style.display = "block";
+                                                 document.getElementById("accept_ride").style.visibility = "hidden";
                                                  var formURL = 'python/customer_details.py';
                                                  $.ajax({
                                                      url : formURL,
                                                      type: "POST",
                                                      dataType: 'json',
-                                                     success: function (data) {
-                                                         if(data!='')
-                                                             document.getElementById("customer_name").value=data[0];
+                                                     success: function (res) {
+                                                         if(res!='')
+                                                             document.getElementById("customer_name").value=res[0];
                                                          else
                                                              alert('Database Error');
                                                     }
@@ -243,38 +269,85 @@
                                                  document.getElementById("source").value=data[3];
                                                  document.getElementById("destination").value=data[4];
                                                  document.getElementById("up_time").value=data[5];
-                                                 $('#accept_ride').html('Finish Ride');
+                                             }
+                                             if(data[8].trim()=='FINISHED'){
+                                                 document.getElementById("ride").style.display = "block";
+                                                 document.getElementById("buttons").style.display = "none";
+                                                 var formURL = 'python/customer_details.py';
+                                                 $.ajax({
+                                                     url : formURL,
+                                                     type: "POST",
+                                                     dataType: 'json',
+                                                     success: function (res) {
+                                                         if(res!='')
+                                                             document.getElementById("customer_name").value=res[0];
+                                                         else
+                                                             alert('Database Error');
+                                                    }
+                                                 });
+                                                 document.getElementById("source").value=data[3];
+                                                 document.getElementById("destination").value=data[4];
+                                                 document.getElementById("up_time").value=data[5];
+                                                 document.getElementById("down_time").value=data[6];
+                                                 document.getElementById("distance").value=data[7];
+                                                 document.getElementById("distance").disabled = true;
+                                                 if(data[9].trim()=='UNPAID'){
+                                                     document.getElementById("bill_details").style.display = "block";
+                                                     document.getElementById("bill_status").value=data[9].trim();
+                                                     document.getElementById("bill_amount").value='Rs. '+data[10].trim();
+                                                 }
+                                                 if(data[9].trim()=='PAID'){
+                                                     alert('bill paid amount: '+data[10].trim());
+                                                     document.getElementById("ride").style.display = "none";
+                                                 }
+                                             }
+                                             else{
+                                                 
                                              }
                                          }
                                          else{
                                              alert('no ride requested');
-                                             $('#ride_details').remove();
                                          }
                                     }
             });
         }
         $('#accept_ride').click(function(e){
+            document.getElementById("customer_details").style.display = "block";
+            document.getElementById("ride_details").style.display = "block";
             var formURL = 'python/ride_accept.py';
             $.ajax({   
                     url : formURL,
                     type: "POST",
                     dataType: 'json',
                     success: function (data) {
-                                         if(data==1){
-                                             alert('Ride has been accepted');
-                                             //$('#accept_ride').html('Finish Ride');
-                                             document.getElementById("accept_ride").style.visibility = "hidden";
-                                             document.getElementById("finish_ride").style.visibility = "visible";
-                                             sts=1;
-                                         }else{
-                                             alert('Error Occurred');
-                                         }
+                        if(data==1){
+                            alert('Ride has been accepted');
+                            document.getElementById("accept_ride").style.visibility = "hidden";
+                            document.getElementById("finish_ride").style.visibility = "visible";
+                            var formURL = 'python/ride_details.py';
+                            $.ajax({   
+                                    url : formURL,
+                                    type: "POST",
+                                    dataType: 'json',
+                                    success: function (data) {
+                                        if(data!=''){
+                                            if(data[8].trim()=='ACCEPTED'){
+                                                document.getElementById("up_time").value=data[5];
+                                            }
+                                        }
                                     }
+                            });
+                        }else{
+                            alert('Error Occurred');
+                        }
+                    }
             });
             e.preventDefault();
          })
-        $("#fm_driver_list").submit(function(e){
-            document.getElementById("finish_ride").style.visibility = "hidden";
+        $("#fm_ride_distance").submit(function(e){
+            document.getElementById("customer_details").style.display = "block";
+            document.getElementById("ride_details").style.display = "block";
+            document.getElementById("buttons").style.display = "none";
             var distance = $('#distance').val();
             var formURL = $(this).attr("action");
             var data = {
@@ -286,13 +359,58 @@
                     data : data,
                     dataType: 'json',
                     success: function (data) {
-                                         if(data==1){
-                                             alert('Ride has been finished.');
-                                             document.getElementById("distance").disabled = true;
-                                         }
+                        if(data==1){
+                            alert('Ride has been finished.');
+                            document.getElementById("distance").disabled = true;
+                            var formURL = 'python/ride_details.py';
+                            $.ajax({   
+                                url : formURL,
+                                type: "POST",
+                                dataType: 'json',
+                                success: function (data) {
+                                    if(data!=''){
+                                        if(data[8].trim()=='FINISHED'){
+                                            document.getElementById("ride").style.display = "block";
+                                            document.getElementById("customer_details").style.display = "block";
+                                            document.getElementById("ride_details").style.display = "none";
+                                            document.getElementById("bill_details").style.display = "block";
+                                            document.getElementById("buttons").style.display = "none";
+                                            var formURL = 'python/customer_details.py';
+                                            $.ajax({
+                                                url : formURL,
+                                                type: "POST",
+                                                dataType: 'json',
+                                                success: function (res) {
+                                                    if(res!='')
+                                                        document.getElementById("customer_name").value=res[0];
+                                                    else
+                                                        alert('Database Error');
+                                                }
+                                            });
+                                            document.getElementById("source").value=data[3];
+                                            document.getElementById("destination").value=data[4];
+                                            if(data[9].trim()=='UNPAID'){
+                                                document.getElementById("bill_details").style.display = "block";
+                                                document.getElementById("bill_status").value=data[9].trim();
+                                                document.getElementById("bill_amount").value='Rs. '+data[10].trim();
+                                            }
+                                            if(data[9].trim()=='PAID'){
+                                                alert('bill paid amount: '+data[10].trim());
+                                                document.getElementById("ride").style.display = "none";
+                                            }
+                                        }
                                     }
-                });
-                e.preventDefault();
+                                    else{
+                                        alert('no ride requested');
+                                    }
+                                }
+                        });
+                        }
+                        else
+                            alert('Error Occurred');
+                    }
+            });
+            e.preventDefault();
         });
     </script>
   </body>

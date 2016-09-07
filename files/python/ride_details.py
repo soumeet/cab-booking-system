@@ -8,14 +8,16 @@ con=cx_Oracle.connect('cbs/apss@localhost/xe')
 
 cur=con.cursor()
 data=cgi.FieldStorage()
-did=0
-cid=0
-rid=0
+did=-1
+cid=-1
+rid=-1
 source=""
 destination=""
 uptime=""
 downtime=""
 distance=0
+amount=0
+bill_status="-1"
 sts=""
 
 sql="SELECT ID FROM SESSIONS WHERE TYPE = 'DID'"
@@ -42,10 +44,16 @@ for r in cur:
         downtime=r[6].strftime('%d-%b-%y %H:%M')
     else:
         downtime="-1"
-    if r[7]=='None':
+    if r[7]!='None':
         distance=r[7]
     else:
         distance=-1
     sts=r[8]
-    
-print("[\"", rid, "\",\"", did, "\",\"", cid, "\",\"", source, "\",\"", destination, "\",\"", uptime, "\",\"", downtime, "\",\"", distance, "\",\"", sts, "\"]")
+
+sql="SELECT STATUS, AMOUNT FROM BILL WHERE RIDE_ID = %s " % (rid)
+cur.execute(sql)
+for r in cur:
+    bill_status=r[0]
+    amount=r[1]
+
+print("[\"", rid, "\",\"", did, "\",\"", cid, "\",\"", source, "\",\"", destination, "\",\"", uptime, "\",\"", downtime, "\",\"", distance, "\",\"", sts, "\",\"", bill_status, "\",\"", amount, "\"]")

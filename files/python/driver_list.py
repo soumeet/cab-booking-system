@@ -15,7 +15,6 @@ destination=data.getvalue('destination')
 typ=data.getvalue('type')
 sts=-1
 
-#print("<h2>source: ", source," destination: ", destination," type: ", typ,"</h2>")
 if typ=="TYPE":
     sql="SELECT D.NAME, C.TYPE, C.NAME, C.COST_PER_KM FROM DRIVER D, CAB C WHERE D.CAB_ID = C.CAB_ID AND D.STATUS = 'ONLINE'"
 else:

@@ -8,7 +8,7 @@ con=cx_Oracle.connect('cbs/apss@localhost/xe')
 
 cur=con.cursor()
 data=cgi.FieldStorage()
-distance=data.getvalue('distance')
+distance=float(data.getvalue('distance'))
 sts=-2
 cid=0
 did=0
@@ -45,7 +45,6 @@ cur.execute(sql)
 for r in cur:
     mileage=r[0]
 sql="SELECT RIDE_ID FROM RIDE WHERE DRIVER_ID = %s AND CUSTOMER_ID = %s AND DISTANCE = %s AND STATUS = 'FINISHED'" % (did, cid, distance)
-print(sql)
 cur.execute(sql)
 for r in cur:
     rid=r[0]
@@ -55,7 +54,6 @@ now=datetime.datetime.now().strftime("%d-%b-%y")
 
 if sts==-1:
     sql="INSERT INTO BILL(RIDE_ID, BILL_DATE, STATUS, AMOUNT) VALUES(%s, '%s', 'UNPAID', %s)" % (rid, now, amount)
-    print(sql)
     cur.execute(sql)
     cur.execute('COMMIT')
     sts=1
